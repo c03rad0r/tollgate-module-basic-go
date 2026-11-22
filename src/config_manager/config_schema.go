@@ -276,6 +276,7 @@ func GetConfigSchema() []FieldSchema {
 					Children: []FieldSchema{
 						{Name: "Interface", JSONKey: "interface", Type: "string", Description: "Interface name", Default: "", Required: true, Editable: true},
 						{Name: "Address", JSONKey: "address", Type: "string", Description: "Address to advertise (optional; learned at runtime if empty)", Required: false, Editable: true},
+						{Name: "Gateway", JSONKey: "gateway", Type: "string", Description: "Uplink next hop (optional; discovered at runtime if empty; required when the uplink has no default route)", Required: false, Editable: true},
 					},
 				},
 				{

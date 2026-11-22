@@ -165,6 +165,7 @@ type MPTCPBondingConfig struct {
 type MPTCPUplinkConfig struct {
 	Interface string `json:"interface"`
 	Address   string `json:"address,omitempty"`
+	Gateway   string `json:"gateway,omitempty"`
 }
 
 // MPTCPTunnelConfig is one optional per-uplink WireGuard overlay. The JSON

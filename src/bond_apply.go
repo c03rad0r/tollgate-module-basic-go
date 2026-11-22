@@ -69,8 +69,14 @@ func applyBondConfig(
 				flushOK = false
 			}
 		}
+		if script := cfg.SteeringFlushScript(); script != "" {
+			if err := applier("/bin/sh", "-c", script); err != nil {
+				logger.WithError(err).Warn("MPTCP bond disabled; steering flush failed")
+				flushOK = false
+			}
+		}
 		if flushOK {
-			logger.Info("MPTCP bond disabled; kernel endpoints and policy routes flushed")
+			logger.Info("MPTCP bond disabled; kernel endpoints, policy routes and steering flushed")
 		}
 		return
 	}
@@ -81,6 +87,14 @@ func applyBondConfig(
 
 	if err := reconciler.ReconcileCurrent(); err != nil {
 		logger.WithError(err).Error("MPTCP bond initial reconcile failed")
+	}
+	// Guest steering is firewall state, not endpoint state, and a reload
+	// restarts nodogsplash; it is applied once here rather than on every
+	// interface-event reconcile.
+	if script := cfg.SteeringApplyScript(); script != "" {
+		if err := applier("/bin/sh", "-c", script); err != nil {
+			logger.WithError(err).Error("MPTCP bond steering apply failed")
+		}
 	}
 	// #972 observability: the bond wires up late in boot (after merchant
 	// construction), and early samples read as false negatives without a

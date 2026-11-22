@@ -170,6 +170,7 @@ func GetConfigSchema() []FieldSchema {
 				{Name: "PortalLoginTimeoutS", JSONKey: "portal_login_timeout_s", Type: "int", Description: "Total seconds allowed for one automatic portal login attempt.", Default: 10, Required: false, Editable: true, Min: 1, Max: 120},
 				{Name: "PortalLoginMark", JSONKey: "portal_login_mark", Type: "int", Description: "Firewall mark on the portal-login socket. The default 0x20000 matches the NDS trusted mark, so TollGate's own port-80 DNAT does not swallow the venue portal request.", Default: 0x20000, Required: false, Editable: true, Min: 0},
 				{Name: "PortalLoginDNS", JSONKey: "portal_login_dns", Type: "string", Description: "Resolver for the portal host, usually the venue DHCP server. Empty uses the system resolver, which may be the wrong uplink's DNS.", Default: "", Required: false, Editable: true},
+				{Name: "BondedSTANames", JSONKey: "bonded_sta_names", Type: "array", Description: "wifi-iface sections owned by an MPTCP bond; the single-STA manager must not disable or overwrite them.", Default: []string{}, Required: false, Editable: true, Children: []FieldSchema{{Type: "string"}}},
 			},
 		},
 		{

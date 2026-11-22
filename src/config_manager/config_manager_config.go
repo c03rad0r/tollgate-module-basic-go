@@ -130,6 +130,9 @@ type UpstreamWifiConfig struct {
 	// PortalLoginDNS is an explicit resolver for the portal host (usually the
 	// venue DHCP server). Empty means the system resolver.
 	PortalLoginDNS string `json:"portal_login_dns,omitempty"`
+	// BondedSTANames lists wifi-iface sections owned by an MPTCP bond. The
+	// single-STA upstream manager must never disable or overwrite them.
+	BondedSTANames []string `json:"bonded_sta_names,omitempty"`
 }
 
 // MPTCPBondingConfig describes an optional MPTCP multi-WAN bond.
@@ -563,6 +566,7 @@ func NewDefaultConfig() *Config {
 			PortalLoginPassField:   "password",
 			PortalLoginTimeoutS:    10,
 			PortalLoginMark:        0x20000,
+			BondedSTANames:         []string{},
 		},
 		// Empty means "keep what the router already has" — see the field
 		// comments on Config. These two are the literals the schema declares,

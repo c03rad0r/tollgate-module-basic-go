@@ -199,13 +199,17 @@ type MPTCPBondingConfig struct {
 	Transport string `json:"transport,omitempty"`
 	// Tunnels are optional per-uplink WireGuard overlays, used when the
 	// advertised-address shape needs a peer-reachable address behind NAT.
-	Tunnels      []MPTCPTunnelConfig `json:"tunnels,omitempty"`
-	Subflows     int                 `json:"subflows,omitempty"`
-	SteeringCIDR string              `json:"steering_cidr,omitempty"`
-	SocksPort    int                 `json:"socks_port,omitempty"`
-	TproxyPort   int                 `json:"tproxy_port,omitempty"`
-	FwMark       string              `json:"fwmark,omitempty"`
-	FwMarkTable  int                 `json:"fwmark_table,omitempty"`
+	Tunnels  []MPTCPTunnelConfig `json:"tunnels,omitempty"`
+	Subflows int                 `json:"subflows,omitempty"`
+	// ReconcileIntervalSeconds re-applies the bond on a timer to repair drift
+	// with no interface event (a replaced metric route, a flushed endpoint).
+	// Zero disables the timer; the event-driven reconciler still runs.
+	ReconcileIntervalSeconds int    `json:"reconcile_interval_s,omitempty"`
+	SteeringCIDR             string `json:"steering_cidr,omitempty"`
+	SocksPort                int    `json:"socks_port,omitempty"`
+	TproxyPort               int    `json:"tproxy_port,omitempty"`
+	FwMark                   string `json:"fwmark,omitempty"`
+	FwMarkTable              int    `json:"fwmark_table,omitempty"`
 }
 
 // MPTCPUplinkConfig is one member of the bond. Address may be empty, in which

@@ -142,6 +142,13 @@ type UpstreamWifiConfig struct {
 	// this list is how a bond's second STA (or any named netdev) gets its own
 	// recipe. A matching entry supersedes the flat fields for that interface.
 	PortalLoginRecipes []PortalLoginRecipeConfig `json:"portal_login_recipes,omitempty"`
+	// ConsentManifest is the operator's per-AP opt-in list for non-TollGate
+	// upstreams. An open network with no pre-accepted entry is observed, never
+	// joined automatically.
+	ConsentManifest []ConsentEntryConfig `json:"consent_manifest,omitempty"`
+	// AllowAnyOpen permits open networks with no manifest entry. Off by
+	// default: an unseen open AP cannot carry informed consent.
+	AllowAnyOpen bool `json:"allow_any_open"`
 }
 
 // PortalLoginRecipeConfig is one uplink-scoped portal recipe.
@@ -183,6 +190,19 @@ type PortalLoginRecipeConfig struct {
 	// Zero means no budget.
 	BudgetSeconds int   `json:"budget_seconds,omitempty"`
 	BudgetBytes   int64 `json:"budget_bytes,omitempty"`
+}
+
+// ConsentEntryConfig is one operator-approved upstream network.
+//
+// Match is an exact SSID or a prefix ending in '*'. Consent is
+// "pre-accepted" (automatic joins allowed) or "per-session" (a human must
+// accept this visit). TOSURL records the terms the operator reviewed; it is
+// never fetched automatically.
+type ConsentEntryConfig struct {
+	Match   string `json:"match"`
+	TOSURL  string `json:"tos_url,omitempty"`
+	Consent string `json:"consent"`
+	Recipe  string `json:"recipe,omitempty"`
 }
 
 // MPTCPBondingConfig describes an optional MPTCP multi-WAN bond.
@@ -623,6 +643,8 @@ func NewDefaultConfig() *Config {
 			BondedSTANames:         []string{},
 			PortalLoginAllowHosts:  []string{},
 			PortalLoginRecipes:     []PortalLoginRecipeConfig{},
+			ConsentManifest:        []ConsentEntryConfig{},
+			AllowAnyOpen:           false,
 		},
 		// Empty means "keep what the router already has" — see the field
 		// comments on Config. These two are the literals the schema declares,

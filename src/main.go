@@ -847,6 +847,15 @@ func initUpstreamManager() {
 
 	cfg := configManager.GetConfig()
 	if cfg != nil && cfg.UpstreamWifi.ScanIntervalSeconds > 0 {
+		consent := make([]wireless_gateway_manager.ConsentEntry, 0, len(cfg.UpstreamWifi.ConsentManifest))
+		for _, entry := range cfg.UpstreamWifi.ConsentManifest {
+			consent = append(consent, wireless_gateway_manager.ConsentEntry{
+				Match:   entry.Match,
+				TOSURL:  entry.TOSURL,
+				Consent: entry.Consent,
+				Recipe:  entry.Recipe,
+			})
+		}
 		upstreamConfig = wireless_gateway_manager.UpstreamManagerConfig{
 			ScanInterval:           time.Duration(cfg.UpstreamWifi.ScanIntervalSeconds) * time.Second,
 			FastCheck:              time.Duration(cfg.UpstreamWifi.FastCheckSeconds) * time.Second,
@@ -871,6 +880,8 @@ func initUpstreamManager() {
 			PortalLoginMark:        cfg.UpstreamWifi.PortalLoginMark,
 			PortalLoginDNS:         cfg.UpstreamWifi.PortalLoginDNS,
 			PortalLoginAllowHosts:  cfg.UpstreamWifi.PortalLoginAllowHosts,
+			ConsentManifest:        consent,
+			AllowAnyOpen:           cfg.UpstreamWifi.AllowAnyOpen,
 		}
 	}
 

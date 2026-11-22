@@ -189,6 +189,13 @@ func GetConfigSchema() []FieldSchema {
 					{Name: "BudgetSeconds", JSONKey: "budget_seconds", Type: "int", Description: "Authorized session time budget; 0 means no time budget.", Default: 0, Required: false, Editable: true, Min: 0},
 					{Name: "BudgetBytes", JSONKey: "budget_bytes", Type: "int", Description: "Authorized session byte budget; 0 means no byte budget.", Default: 0, Required: false, Editable: true, Min: 0},
 				}},
+				{Name: "AllowAnyOpen", JSONKey: "allow_any_open", Type: "bool", Description: "Join open networks that have no consent-manifest entry. Off by default: an unseen open AP cannot carry informed consent.", Default: false, Required: false, Editable: true},
+				{Name: "ConsentManifest", JSONKey: "consent_manifest", Type: "array", Description: "Operator-approved upstream networks. An open SSID with no pre-accepted entry is observed, never joined automatically.", Default: []ConsentEntryConfig{}, Required: false, Editable: true, Children: []FieldSchema{
+					{Name: "Match", JSONKey: "match", Type: "string", Description: "Exact SSID or a prefix ending in '*'.", Required: true, Editable: true},
+					{Name: "TOSURL", JSONKey: "tos_url", Type: "string", Description: "Terms the operator reviewed (advisory; never fetched automatically).", Required: false, Editable: true},
+					{Name: "Consent", JSONKey: "consent", Type: "string", Description: "pre-accepted allows automatic joins; per-session requires a human for each visit.", Required: true, Editable: true, Enum: []string{"pre-accepted", "per-session"}},
+					{Name: "Recipe", JSONKey: "recipe", Type: "string", Description: "Portal recipe id to use for this network (advisory until the recipe engine lands).", Required: false, Editable: true},
+				}},
 			},
 		},
 		{

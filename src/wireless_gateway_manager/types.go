@@ -49,6 +49,14 @@ type UpstreamManagerConfig struct {
 	// (for example an identity/signup host). The page host is always allowed;
 	// credentials are never sent to any other host.
 	PortalLoginAllowHosts []string
+	// ConsentManifest is the operator's per-AP opt-in list for non-TollGate
+	// upstreams. An open network with no matching entry is observed, never
+	// joined. See consent.go for the matching and posture rules.
+	ConsentManifest []ConsentEntry
+	// AllowAnyOpen is an explicit override for open networks that have no
+	// manifest entry. Off by default: an unseen open AP cannot carry informed
+	// consent.
+	AllowAnyOpen bool
 }
 
 type Connector struct {
